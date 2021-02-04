@@ -1,0 +1,14 @@
+.Wrapper{
+    max-width: 80%;
+    margin: auto;
+}
+.rowWrapper{
+    display: flex;
+}
+.button-select{
+    margin: 2px;
+    display: flex;
+}
+ .grid{
+    margin:1px;
+} 
