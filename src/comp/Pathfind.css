@@ -1,0 +1,36 @@
+*{
+    /* background-color: palegoldenrod; */
+}
+.Wrapper{
+    
+    max-width: 100vw;
+    max-height:100vh;
+    
+}
+.rowWrapper{
+    display: flex;
+}
+ .grid{
+     
+    margin:4vh;
+    margin-left:30vh;
+    /* background-color: brown; */
+   
+} 
+.Wrapper__header{
+    width: 100vw;
+    background-color:black;
+    color: white;
+    height:15vh;
+}
+/* .visualize{
+    margin-left: 10vw;
+}
+.clear{
+    margin-left: 10vw;
+} */
+.buttons{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
