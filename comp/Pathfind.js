@@ -1,21 +1,11 @@
 import React,{useState,useEffect} from  "react";
 import  "./Pathfind.css";
 import Node from "./Node.js";
-//import DFS from "./Dfs.js";
 import Astar from  "./astar.js";
-import { Button, Switch } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-const useStyles = makeStyles((theme) => ({
-    formControl: {
-      margin: theme.spacing(0),
-      minWidth: 120,
-    },
-  }));
+import { Button } from '@material-ui/core';
 const Pathfinder = ()=>{
+    const [startRow,setStartRow]=useState(0);
+    const [startCol,setStartCol]=useState(0);
     const rows=10;
     const cols=25;
     const NODE_START_ROW=0;
@@ -25,11 +15,13 @@ const Pathfinder = ()=>{
     const [Grid,setGrid]=useState([]);
     const [Path,setPath]= useState([]);
     const [visitedNodes,setvisitedNodes] = useState([]);
+    
     useEffect(()=>{
         initalizeGrid();
+        console.log(startRow,startCol);
     },[]);
     
-
+    
     //intialize the grid
     const initalizeGrid=()=>{
         const grid= new Array(cols);
@@ -42,8 +34,6 @@ const Pathfinder = ()=>{
         addNeighbours(grid);
         const startNode=grid[NODE_START_ROW][NODE_START_COL];
         const endNode=grid[ NODE_END_ROW][ NODE_END_COL];
-        //const path=DFS(grid,rows,cols,startNode,endNode);
-        //setPath(path);
         let path=Astar(startNode,endNode);
         startNode.isWalls=false;
         endNode.isWalls=false;
@@ -56,6 +46,7 @@ const Pathfinder = ()=>{
         for(let i=0;i<rows;++i){
             for(let j=0;j<cols;++j){
                 grid[i][j] = new Spot(i,j);
+                
             }
         }
     }
@@ -100,7 +91,7 @@ const Pathfinder = ()=>{
                     <div key={rowIndex} className="rowWrapper">
                         {row.map((col,colIndex)=>{
                             const {isStart,isEnd,isWalls}=col;
-                            return <Node key={colIndex} isStart={isStart} isEnd={isEnd} row={rowIndex} col={colIndex} isWalls={isWalls}/>;
+                            return <Node setStartRow={setStartRow} setStartCol={setStartCol} key={colIndex} isStart={isStart} isEnd={isEnd} row={rowIndex} col={colIndex} isWalls={isWalls}/>;
                         })}
                     </div>
                  );
@@ -134,56 +125,20 @@ const Pathfinder = ()=>{
         ,20*i)}
         }
     };
-    const classes = useStyles();
-  const [Algorithm, setAlgorithm] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-
-  const handleChange = (event) => {
-    setAlgorithm(event.target.value);
-    if(Algorithm===1) console.log("A*");
-    if(Algorithm===2) console.log("Dishtraa's");
-    if(Algorithm===3) console.log("DFS");
-    if(Algorithm===4) console.log("BFS");
-
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
     //console.log(Path);
+    // function ClearGrid(){
+    //     setClear(true);
+    // }
     return (
-        <div classname="Wrapper">
-            <h1>PathFinder</h1>
-        <div className="button-select">
-            
-        <FormControl className={classes.formControl}>
-        <InputLabel id="demo-controlled-open-select-label">Algorithm</InputLabel>
-        <Select
-          labelId="demo-controlled-open-select-label"
-          id="demo-controlled-open-select"
-          open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          value={Algorithm}
-          onChange={handleChange}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={1}>A*</MenuItem>
-          <MenuItem value={2}>Dishktra's</MenuItem>
-          <MenuItem value={3}>DFS</MenuItem>
-          <MenuItem value={4}>BFS</MenuItem>
-        </Select>
-      </FormControl>
-      
-      <Button variant="contained" color="primary"  onClick={visualizePath}>Visualize</Button>
-      
-      </div>
+        <div className="Wrapper">
+            <div className="Wrapper__header">
+                <h1>PathFinder</h1>
+                <div className="buttons">
+               <Button  variant="contained" color="primary"  onClick={visualizePath}>Visualize</Button>
+                <p>(A* Algorithm)</p>
+                <Button  variant="contained" color="primary"  onClick={()=>{window.location.reload(false)}}>Reset</Button>
+                </div>
+            </div>
             <div className="grid">{gridwithNode}</div>
         </div>
     );

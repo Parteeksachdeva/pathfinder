@@ -1,9 +1,19 @@
 import React from "react";
 import "./Node.css";
-const Node=({isStart,isEnd,row,col,isWalls})=>{
-    const classes=isStart?"node-start" : isWalls ? "iswall" : isEnd ? "node-end" : "";
+import { useEffect,useState } from "react";
+
+//setStartRow,setStartCol,isStart,isEnd,
+const Node=({isEnd,row,col,isWalls})=>{
+    const [classes,setClasses]= useState("");
+    const [isStart,setIsStart] = useState(false);
+    useEffect(()=>{
+        setClasses(isStart?"node-start" : isWalls ? "iswall" : isEnd ? "node-end" : "");
+    },[isStart,classes])
     return(
-        <div className={`node ${classes}`} id={`node-${row}-${col}`}></div>
+        <div onClick={()=>{
+                setIsStart(true);
+                // console.log(row, col);
+        }} className={`node ${classes}`} id={`node-${row}-${col}`}></div>
     )
 }
-export default Node;        
+export default Node;
