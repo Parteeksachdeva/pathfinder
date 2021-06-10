@@ -4,19 +4,20 @@ import Node from "./Node.js";
 import Astar from  "./astar.js";
 import { Button } from '@material-ui/core';
 const Pathfinder = ()=>{
-    const rows=13;
+    const [startRow,setStartRow]=useState(0);
+    const [startCol,setStartCol]=useState(0);
+    const rows=10;
     const cols=25;
-    const NODE_START_ROW=5;
-    const NODE_START_COL=5;
-    const NODE_END_COL=cols-5;
-    const NODE_END_ROW=rows-5;
+    const NODE_START_ROW=0;
+    const NODE_START_COL=0;
+    const NODE_END_COL=cols-1;
+    const NODE_END_ROW=rows-1;
     const [Grid,setGrid]=useState([]);
     const [Path,setPath]= useState([]);
     const [visitedNodes,setvisitedNodes] = useState([]);
-    const [clear,setClear]=useState([]);
+    
     useEffect(()=>{
         initalizeGrid();
-        console.log("acbhjwkbecb");
     },[]);
     
     
@@ -33,6 +34,7 @@ const Pathfinder = ()=>{
         const startNode=grid[NODE_START_ROW][NODE_START_COL];
         const endNode=grid[ NODE_END_ROW][ NODE_END_COL];
         let path=Astar(startNode,endNode);
+        //console.log(Astar(startNode,endNode));
         startNode.isWalls=false;
         endNode.isWalls=false;
         setPath(path.path);
@@ -88,8 +90,9 @@ const Pathfinder = ()=>{
                  return(
                     <div key={rowIndex} className="rowWrapper">
                         {row.map((col,colIndex)=>{
+                            // console.log(col);
                             const {isStart,isEnd,isWalls}=col;
-                            return <Node key={colIndex} isStart={isStart} isEnd={isEnd} row={rowIndex} col={colIndex} isWalls={isWalls}/>;
+                            return <Node NODE_END_COL={NODE_END_COL} NODE_END_ROW={NODE_END_ROW} NODE_START_COL={NODE_START_COL} NODE_START_ROW={NODE_START_ROW} setvisitedNodes={setvisitedNodes} setPath={setPath} Grid={Grid} setGrid={setGrid} setStartRow={setStartRow} setStartCol={setStartCol} key={colIndex} isStart={isStart} isEnd={isEnd} row={rowIndex} col={colIndex} isWalls={isWalls}/>;
                         })}
                     </div>
                  );
@@ -130,14 +133,37 @@ const Pathfinder = ()=>{
     return (
         <div className="Wrapper">
             <div className="Wrapper__header">
-                <div><h1>PathFinder</h1></div>
+                <h1>PathFinder</h1>
                 <div className="buttons">
-                <div className="visualize"><Button  variant="contained" color="primary"  onClick={visualizePath}>Visualize</Button></div>
-                <div>A* Algorithm</div>
-                <div className="clear"><Button  variant="contained" color="primary"  onClick={()=>{window.location.reload(false)}}>Clear Board</Button></div>
+               <Button  variant="contained" color="primary" onClick={visualizePath}>Visualize</Button>
+                <p>(A* Algorithm)</p>
+                <Button  variant="contained" color="primary" onClick={()=>{
+                    let newIds = Grid.slice();
+                    for(let i=0;i<rows;i++){
+                        for(let j=0;j<cols;j++){
+                            newIds[i][j].isWalls=false;
+                            if(Math.random(1)<0.2){
+                                newIds[i][j].isWalls=true;
+                            } 
+                            const startNode=Grid[NODE_START_ROW][NODE_START_COL];
+                            const endNode=Grid[ NODE_END_ROW][ NODE_END_COL];
+                            let path=Astar(startNode,endNode);
+                            startNode.isWalls=false;
+                            endNode.isWalls=false;
+                            setPath(path.path);
+                            setvisitedNodes(path.visitedNodes);
+                            if(i===NODE_START_ROW && j===NODE_START_ROW) document.getElementById(`node-${i}-${j}`).className="node node-start";
+                            else if(i=== NODE_END_ROW && j=== NODE_END_COL) document.getElementById(`node-${i}-${j}`).className="node node-end";
+                            else document.getElementById(`node-${i}-${j}`).className="node";
+                        }
+                    }
+                    
+                    setGrid(newIds)
+                    
+                    }}>Reset</Button>
                 </div>
-      </div>
-     <div className="grid">{gridwithNode}</div>
+            </div>
+            <div className="grid">{gridwithNode}</div>
         </div>
     );
 };
