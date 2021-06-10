@@ -2,17 +2,13 @@ import React from "react";
 import "./Node.css";
 import { useEffect,useState } from "react";
 import Astar from  "./astar.js";
-
-//setStartRow,setStartCol,isStart,isEnd,
 const Node=({isEnd,row,col,isWalls,isStart,Grid,setGrid, NODE_END_COL, NODE_END_ROW, NODE_START_COL, NODE_START_ROW, setvisitedNodes, setPath})=>{
     const [classes,setClasses]= useState("");
     useEffect(()=>{
         setClasses(isStart ? "node-start" : isWalls ? "iswall" : isEnd ? "node-end" : "");
     },[isStart,classes,isWalls])
     return(
-        <div 
-        // draggable={true} 
-        // onDragOver={(e)=>{e.preventDefault()}}
+        <div
         onClick={(e)=>{
             let newIds = Grid.slice();
             newIds[row][col].isWalls=!newIds[row][col].isWalls;
